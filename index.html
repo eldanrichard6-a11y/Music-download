@@ -3,74 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Melody Pro - Music Downloader</title>
+    <title>Melody Pro</title>
     
     <meta name="google-site-verification" content="Apib7-x98H0j5cPqHWwSMm6dNU4GmODRoqxLiDzdx9I" />
 
-    <meta name="description" content="Melody Pro - Pakua na usikilize muziki mpya bure. App bora ya Eldan Richard.">
-    <meta name="keywords" content="music downloader, download nyimbo, muziki mpya, Melody Pro, Eldan Richard">
-    
     <style>
-        :root { --primary: #00f2fe; --dark-bg: #0f172a; }
-        body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; font-family: sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        .container { width: 100%; max-width: 480px; }
-        h1 { text-align: center; color: var(--primary); }
-        .search-box { display: flex; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
-        input { flex: 1; background: transparent; border: none; color: white; padding: 10px; outline: none; }
-        button { background: var(--primary); border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        .music-card { background: rgba(255,255,255,0.05); margin-bottom: 15px; padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 10px; }
-        audio { width: 100%; height: 35px; }
-        .dl-btn { background: #22c55e; color: white; text-decoration: none; text-align: center; padding: 10px; border-radius: 8px; font-weight: bold; }
-        .ad-space { margin-top: 20px; text-align: center; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 10px; min-height: 50px; }
+        body { background: #0f172a; color: white; font-family: sans-serif; text-align: center; padding: 50px; }
+        input { padding: 12px; width: 80%; border-radius: 8px; border: none; }
+        button { padding: 12px; background: #00f2fe; border: none; border-radius: 8px; font-weight: bold; margin-top: 15px; }
     </style>
-
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-9788085429815036" crossorigin="anonymous"></script>
 </head>
 <body>
-
-<div class="container">
     <h1>Melody Pro</h1>
-    
-    <div class="search-box">
-        <input type="text" id="query" placeholder="Tafuta wimbo au msanii...">
-        <button onclick="search()">Search</button>
-    </div>
-
-    <div id="results"></div>
-
-    <div class="ad-space">
-        <ins class="adsbygoogle"
-             style="display:inline-block;width:320px;height:50px"
-             data-ad-client="ca-app-pub-9788085429815036"
-             data-ad-slot="9788085429"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
-</div>
-
-<script>
-    async function search() {
-        const q = document.getElementById('query').value;
-        const res = document.getElementById('results');
-        if (!q) return;
-        res.innerHTML = "<p style='text-align:center;'>Inatafuta...</p>";
-        
-        try {
-            const response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&entity=song&limit=15`);
-            const data = await response.json();
-            res.innerHTML = "";
-            if(data.results.length === 0) { res.innerHTML = "Wimbo haujapatikana!"; return; }
-            data.results.forEach(song => {
-                res.innerHTML += `
-                    <div class="music-card">
-                        <strong>${song.trackName}</strong>
-                        <small>${song.artistName}</small>
-                        <audio controls src="${song.previewUrl}"></audio>
-                        <a href="${song.previewUrl}" target="_blank" class="dl-btn">DOWNLOAD MP3</a>
-                    </div>`;
-            });
-        } catch (e) { res.innerHTML = "Tatizo la mtandao! Jaribu tena."; }
-    }
-</script>
-
+    <p>Music App ya Eldan Richard</p>
+    <input type="text" placeholder="Tafuta wimbo...">
+    <br>
+    <button>SEARCH</button>
 </body>
 </html>
+ 
