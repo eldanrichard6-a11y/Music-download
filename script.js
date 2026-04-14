@@ -1,85 +1,50 @@
-async function searchMusic() {
-    const query = document.getElementById('searchInput').value;
-    const resultsDiv = document.getElementById('results');
-    
-    if (!query) {
-        alert("Please enter a song name!");
+// 1. Maelezo ya Muziki (Price list)
+const beiYaWimbo = 500; // Shilingi 500 kwa kila wimbo
+
+// 2. Kazi ya kutuma malipo kwenda Selcom
+async function lipiaMuziki(nambaYaSimu, jinaLaWimbo) {
+    if (!nambaYaSimu || nambaYaSimu.length < 10) {
+        alert("Tafadhali weka namba ya simu sahihi (mfano: 0621...)");
         return;
     }
 
-    resultsDiv.innerHTML = "<div style='color: #1DB954; text-align: center;'>Searching global database...</div>";
+    console.log("Inatuma malipo ya " + jinaLaWimbo + " kwenda kwa: " + nambaYaSimu);
+    
+    // Onyesha mteja kuwa mchakato umeanza
+    alert("Ombi la malipo la TZS " + beiYaWimbo + " limetumwa kwenye simu yako (" + nambaYaSimu + ").\n\nTafadhali weka namba ya siri (PIN) kukamilisha malipo.");
 
-    const url = `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=10`;
+    /* KUMBUKA: Sehemu hii ya chini itafanya kazi rasmi ukishapata 
+       API Key na Vendor ID kutoka Selcom. Kwa sasa inafanya majaribio (Simulation).
+    */
+    
+    // Hapa ndipo kodi ya Selcom itakaa baadaye:
+    const malipoYamefanikiwa = true; // Hii ni kwa ajili ya majaribio tu
 
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-        resultsDiv.innerHTML = ""; 
+    if (malipoYamefanikiwa) {
+        shushaMuziki(jinaLaWimbo);
+    }
+}
 
-        if (data.results.length === 0) {
-            resultsDiv.innerHTML = "<p style='text-align:center;'>No music found. Try again.</p>";
-            return;
-        }
+// 3. Kazi ya kuruhusu wimbo ushuke (Download) baada ya kulipa
+function shushaMuziki(jina) {
+    alert("Asante! Malipo yamepokelewa. Wimbo wako wa '" + jina + "' unaanza kushuka sasa...");
+    
+    // Hapa unaweka link halisi ya wimbo wako
+    // window.location.href = "nyimbo/wimbo-wako.mp3";
+}
 
-        data.results.forEach(song => {
-            const card = document.createElement('div');
-            card.className = 'music-card';
+// 4. Kazi ya kusikiliza pindi mteja anapobonyeza kitufe cha "Download"
+document.addEventListener('DOMContentLoaded', () => {
+    const downloadButtons = document.querySelectorAll('.download-btn');
+    
+    downloadButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const wimbo = button.getAttribute('data-song');
+            const namba = prompt("Ili kupata '" + wimbo + "', weka namba yako ya M-Pesa/TigoPesa:");
             
-            card.innerHTML = `
-                <div class="music-info">
-                    <span class="price-tag">$5 / TZS 13k</span>
-                    <strong>${song.trackName}</strong>
-                    <small>${song.artistName}</small>
-                </div>
-                
-                <button class="buy-btn" onclick="startPayment('${song.trackName}')">
-                    Secure Purchase
-                </button>
-
-                <div class="payment-methods">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/M-Pesa_logo.png" alt="M-Pesa">
-                </div>
-            `;
-            resultsDiv.appendChild(card);
-        });
-
-    } catch (error) {
-        resultsDiv.innerHTML = `<p style="color:red; text-align:center;">Network error. Check your connection.</p>`;
-    }
-}
-
-function startPayment(songName) {
-    const customerEmail = prompt("Enter your email for the download receipt:");
-    
-    if (!customerEmail || !customerEmail.includes("@")) {
-        alert("A valid email is required.");
-        return;
-    }
-
-    FlutterwaveCheckout({
-        public_key: "YOUR_FLUTTERWAVE_PUBLIC_KEY_HERE", 
-        tx_ref: "GLOBAL-MUSIC-" + Date.now(),
-        amount: 5,
-        currency: "USD",
-        payment_options: "card, mobilemoneytanzania, googlepay",
-        customer: {
-            email: customerEmail,
-            name: "Global Music User",
-        },
-        customizations: {
-            title: "World Music Pro",
-            description: "Purchase: " + songName,
-        },
-        callback: function (data) {
-            if (data.status === "successful") {
-                alert("Payment Successful! Your download for " + songName + " is starting.");
-                // Hapa unaweza kuweka window.location.href kumpa wimbo
+            if (namba) {
+                lipiaMuziki(namba, wimbo);
             }
-        },
-        onclose: function() {
-            console.log("Payment canceled");
-        }
+        });
     });
-}
+});
