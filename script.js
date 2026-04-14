@@ -1,3 +1,4 @@
+// 1. Kazi ya kutafuta muziki duniani kote
 async function searchMusic() {
     const query = document.getElementById('searchInput').value;
     const resultsDiv = document.getElementById('results');
@@ -7,77 +8,78 @@ async function searchMusic() {
         return;
     }
 
-    resultsDiv.innerHTML = "<div class='loading'>Searching worldwide...</div>";
+    resultsDiv.innerHTML = "<div style='color: #1DB954; text-align: center;'>Searching worldwide...</div>";
 
-    // URL ya iTunes API (Muziki wa dunia yote)
+    // Tunatumia iTunes API kwa sababu ina kila aina ya muziki duniani
     const url = `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=10`;
 
     try {
         const response = await fetch(url);
+        if (!response.ok) throw new Error("Connection failed");
         
-        if (!response.ok) {
-            throw new Error("Internet connection problem");
-        }
-
         const data = await response.json();
         resultsDiv.innerHTML = ""; 
 
         if (data.results.length === 0) {
-            resultsDiv.innerHTML = "<p>No music found. Try again.</p>";
+            resultsDiv.innerHTML = "<p style='text-align:center;'>No music found. Try another search.</p>";
             return;
         }
 
+        // Tunatengeneza muonekano wa kila wimbo
         data.results.forEach(song => {
             const card = document.createElement('div');
             card.className = 'music-card';
             
-            const paypalId = `pay-${song.trackId}`;
-            
             card.innerHTML = `
                 <div class="music-info">
-                    <span class="price-tag">$5.00</span>
+                    <span class="price-tag">TZS 13,000 / $5.00</span>
                     <strong>${song.trackName}</strong>
-                    <small>${song.artistName} | ${song.collectionName}</small>
+                    <small>${song.artistName}</small>
                 </div>
-                <div id="${paypalId}"></div>
+                <button class="buy-btn" onclick="startPayment('${song.trackName}')">Buy & Download</button>
             `;
-            
             resultsDiv.appendChild(card);
-
-            // Washa kitufe cha PayPal kwa wimbo huu
-            initPayPal(paypalId, song.trackName);
         });
 
     } catch (error) {
-        console.error(error);
-        resultsDiv.innerHTML = `<p style="color:red">Error: ${error.message}. Please check your data connection.</p>`;
+        resultsDiv.innerHTML = `<p style="color:red; text-align:center;">Error: Please check your internet connection.</p>`;
     }
 }
 
-function initPayPal(elementId, songName) {
-    paypal.Buttons({
-        style: {
-            shape: 'rect',
-            color: 'gold',
-            layout: 'vertical',
-            label: 'pay',
+// 2. Kazi ya kuanzisha malipo (Flutterwave)
+function startPayment(songName) {
+    // Tunamuuliza mteja email ili Flutterwave itume risiti
+    const customerEmail = prompt("Enter your email to receive the download link:");
+    
+    if (!customerEmail || !customerEmail.includes("@")) {
+        alert("A valid email is required to process payment.");
+        return;
+    }
+
+    FlutterwaveCheckout({
+        public_key: "YOUR_FLUTTERWAVE_PUBLIC_KEY_HERE", // Futa hii na uweke Key yako ya Flutterwave
+        tx_ref: "MUSIC-" + Date.now(),
+        amount: 5, // Hii ni $5. Mfumo utaibadilisha kuwa TZS kwa mteja wa Tanzania
+        currency: "USD", 
+        payment_options: "card, mobilemoneytanzania, googlepay, applepay",
+        customer: {
+            email: customerEmail,
+            name: "Music Buyer",
         },
-        createOrder: function(data, actions) {
-            return actions.order.create({
-                purchase_units: [{
-                    description: `Music Purchase: ${songName}`,
-                    amount: {
-                        currency_code: 'USD',
-                        value: '5.00'
-                    }
-                }]
-            });
+        customizations: {
+            title: "Global Music Downloader",
+            description: "Payment for: " + songName,
+            logo: "https://your-domain.com/icon.png",
         },
-        onApprove: function(data, actions) {
-            return actions.order.capture().then(function(details) {
-                alert('Success! Thank you ' + details.payer.name.given_name + '. You can now download ' + songName);
-                // Hapa unaweza kuweka logic ya kuanza kudownload
-            });
+        callback: function (data) {
+            if (data.status === "successful") {
+                alert("Malipo Yamefanikiwa! Thank you for purchasing " + songName);
+                console.log("Transaction ID: ", data.transaction_id);
+                // Hapa unaweza kuongeza kodi ya kumpa link ya wimbo
+            }
+        },
+        onclose: function() {
+            console.log("Payment window closed");
         }
-    }).render(`#${elementId}`);
+    });
 }
