@@ -3,85 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daniel Music Store</title>
+    <title>World Music Pro</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: white; margin: 0; padding: 20px; text-align: center; }
-        .search-box { margin: 20px 0; }
-        input { padding: 12px; width: 65%; border-radius: 25px; border: none; outline: none; }
-        button#search-btn { padding: 12px 25px; border-radius: 25px; border: none; background-color: #1DB954; color: white; font-weight: bold; cursor: pointer; }
-        #results { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; }
-        .song-card { background: #1e1e1e; padding: 10px; border-radius: 10px; transition: 0.3s; }
-        .song-card img { width: 100%; border-radius: 8px; }
-        .song-card h3 { font-size: 14px; margin: 10px 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .download-btn { background: #1DB954; color: white; border: none; padding: 8px; width: 100%; border-radius: 20px; font-size: 12px; cursor: pointer; margin-top: 5px; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #0b0b0b; color: #ffffff; margin: 0; padding: 20px; text-align: center; }
+        .header { margin-bottom: 30px; }
+        h1 { color: #1DB954; font-size: 2.5rem; margin-bottom: 5px; }
+        .search-box { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
+        input { padding: 15px; width: 60%; border-radius: 30px; border: none; background: #222; color: white; outline: none; }
+        button { padding: 15px 30px; border-radius: 30px; border: none; background: #1DB954; color: white; font-weight: bold; cursor: pointer; }
+        #results { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; padding: 10px; }
+        .card { background: #181818; padding: 15px; border-radius: 15px; transition: 0.3s; }
+        .card:hover { background: #282828; }
+        .card img { width: 100%; border-radius: 10px; margin-bottom: 10px; }
+        .card h3 { font-size: 14px; margin: 5px 0; color: #fff; height: 35px; overflow: hidden; }
+        .pay-btn { background: #1DB954; border: none; color: white; padding: 10px; width: 100%; border-radius: 20px; font-size: 12px; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <h1>Daniel Music Store 🎵</h1>
-    
+    <div class="header">
+        <h1>World Music Pro</h1>
+        <p>Search, Pay & Download Global Hits</p>
+    </div>
+
     <div class="search-box">
-        <input type="text" id="search-input" placeholder="Tafuta wimbo au msanii...">
-        <button id="search-btn" onclick="searchMusic()">Tafuta</button>
+        <input type="text" id="searchInput" placeholder="Andika jina la wimbo au msanii...">
+        <button onclick="tafutaMuziki()">Search</button>
     </div>
 
     <div id="results">
-        <p>Andika jina la wimbo kuanza...</p>
-    </div>
+        </div>
 
     <script>
-        // KODI YA TAFUTA (SEARCH)
-        async function searchMusic() {
-            const query = document.getElementById('search-input').value;
-            const resultsDiv = document.getElementById('results');
-            
+        async function tafutaMuziki() {
+            const query = document.getElementById('searchInput').value;
+            const container = document.getElementById('results');
+
             if (!query) {
-                alert("Andika jina la wimbo!");
+                alert("Tafadhali andika jina la wimbo!");
                 return;
             }
 
-            resultsDiv.innerHTML = "<p>Inatafuta...</p>";
+            container.innerHTML = "<p>Inatafuta muziki wa " + query + "... Tafadhali subiri.</p>";
 
             try {
-                const response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=12`);
+                // Tunatumia iTunes API kwa sababu ni rahisi na haina malipo ya kuanza
+                const url = `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=12`;
+                const response = await fetch(url);
                 const data = await response.json();
-                resultsDiv.innerHTML = ""; 
+
+                container.innerHTML = ""; // Futa meseji ya "Inatafuta"
 
                 if (data.results.length === 0) {
-                    resultsDiv.innerHTML = "<p>Hatujapata kitu, jaribu tena.</p>";
+                    container.innerHTML = "<p>Pole, hakuna wimbo uliopatikana. Jaribu jina lingine.</p>";
                     return;
                 }
 
                 data.results.forEach(song => {
-                    const songCard = document.createElement('div');
-                    songCard.className = 'song-card';
-                    songCard.innerHTML = `
-                        <img src="${song.artworkUrl100.replace('100x100', '300x300')}" alt="cover">
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <img src="${song.artworkUrl100.replace('100x100', '400x400')}" alt="cover">
                         <h3>${song.trackName}</h3>
-                        <button class="download-btn" onclick="anzishaMalipo('${song.trackName.replace(/'/g, "")}', '${song.previewUrl}')">
-                            Pakua (TZS 500)
+                        <p style="font-size:12px; color:#b3b3b3;">${song.artistName}</p>
+                        <button class="pay-btn" onclick="fanyaMalipo('${song.trackName.replace(/'/g, "")}', '${song.previewUrl}')">
+                            Download (500/=)
                         </button>
                     `;
-                    resultsDiv.innerHTML += songCard.outerHTML;
+                    container.appendChild(card);
                 });
             } catch (error) {
-                resultsDiv.innerHTML = "<p>Tatizo la mtandao!</p>";
+                console.error(error);
+                container.innerHTML = "<p>Tatizo la mtandao! Hakikisha uwashe data na ujaribu tena.</p>";
             }
         }
 
-        // KODI YA MALIPO (PAYMENT)
-        function anzishaMalipo(jina, link) {
-            const namba = prompt(`Weka namba ya M-PESA/TIGO PESA ili kupakua: ${jina}`);
+        function fanyaMalipo(jina, link) {
+            const namba = prompt("Andika namba yako ya M-PESA/TIGO PESA kuanza malipo ya " + jina + ":");
+            
             if (namba && namba.length >= 10) {
-                alert("Ombi la malipo limetumwa kwenye simu yako. Weka PIN kukamilisha.");
+                alert("Ombi limetumwa kwa namba: " + namba + ". Subiri ujumbe wa namba ya siri kisha weka PIN kukamilisha.");
                 
-                // Simulation ya kusubiri malipo
+                // Hapa tunajifanya malipo yamekamilika baada ya sekunde 3 (Simulation)
                 setTimeout(() => {
-                    alert("Malipo yamefanikiwa! Wimbo unaanza kushuka sasa.");
+                    alert("Malipo Yamefanikiwa! Wimbo unaanza kupakuliwa sasa.");
                     window.location.href = link; 
-                }, 3000);
+                }, 4000);
             } else if (namba) {
-                alert("Namba haina urefu sahihi!");
+                alert("Namba hiyo sio sahihi. Jaribu tena.");
             }
         }
     </script>
