@@ -49,3 +49,16 @@ body {
     padding: 8px 12px;
     border-radius: 5px;
 }
+.music-card {
+    display: flex;
+    flex-direction: column; /* Inakaa vizuri zaidi kwenye simu */
+    gap: 10px;
+    background: #1e1e1e;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+}
+
+#results div[id^="paypal-button-"] {
+    width: 100%;
+}
