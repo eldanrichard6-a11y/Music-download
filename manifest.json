@@ -1,6 +1,10 @@
 {
-  "short_name": "MusicDownloader",
-  "name": "Global Music Downloader",
+  "name": "Code Pro Music",
+  "short_name": "CodePro",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0b0b0b",
+  "theme_color": "#1DB954",
   "icons": [
     {
       "src": "icon.png",
@@ -12,10 +16,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "start_url": "./index.html",
-  "background_color": "#121212",
-  "display": "standalone",
-  "theme_color": "#1DB954",
-  "description": "Download music from all over the world."
+  ]
 }
