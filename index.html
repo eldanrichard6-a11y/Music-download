@@ -44,5 +44,36 @@ button {
 
     <h1>Melody Pro imeshakuwa Verified!</h1>
     <p>App ya Eldan Richard sasa iko tayari.</p>
+    <script>
+    function searchMusic() {
+    let query = document.getElementById('searchInput').value;
+    let resultsDiv = document.getElementById('results');
+
+    if (query === "") {
+        alert("Tafadhali andika jina la wimbo!");
+        return;
+    }
+
+    resultsDiv.innerHTML = "<p>Inatafuta...</p>";
+
+    // Mfano wa kutafuta kutumia API ya bure (iTunes API)
+    fetch(`https://itunes.apple.com/search?term=${query}&media=music&limit=10`)
+    .then(response => response.json())
+    .then(data => {
+        resultsDiv.innerHTML = "";
+        data.results.forEach(song => {
+            resultsDiv.innerHTML += `
+                <div style="border-bottom: 1px solid #eee; padding: 10px;">
+                    <strong>${song.trackName}</strong> - ${song.artistName} <br>
+                    <audio controls src="${song.previewUrl}"></audio>
+                </div>
+            `;
+        });
+    })
+    .catch(error => {
+        resultsDiv.innerHTML = "<p>Imeshindikana kupata nyimbo. Jaribu tena.</p>";
+    });
+}
+    </script>
 </body>
 </html>
