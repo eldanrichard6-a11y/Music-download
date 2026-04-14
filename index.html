@@ -24,6 +24,28 @@
 
     <span class="buy-text">BUY AND ENJOY</span>
     <h1>Code Pro</h1>
+    <div style="margin: 10px 0;">
+    <button onclick="shareApp()" style="background: #25D366; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">
+        SHARE APP TO FRIENDS
+    </button>
+</div>
+
+<script>
+function shareApp() {
+    const shareData = {
+        title: 'Code Pro Music',
+        text: 'Pata mamilioni ya nyimbo mpya na kali hapa Code Pro! Pakua sasa:',
+        url: window.location.href // Hii itachukua link yako ya Tiiny.host au GitHub moja kwa moja
+    }
+    
+    if (navigator.share) {
+        navigator.share(shareData);
+    } else {
+        alert("Copy link hii na usambaze: " + window.location.href);
+    }
+}
+</script>
+
 
     <div class="code-tags">
         <span class="tag">Python</span><span class="tag">C#</span><span class="tag">C++</span><span class="tag">Swift</span>
