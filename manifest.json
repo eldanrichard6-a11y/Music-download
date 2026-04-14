@@ -1,11 +1,6 @@
 {
-  "name": "Melody Pro Music",
-  "short_name": "MelodyPro",
-  "description": "Search and Stream Music Fast",
-  "start_url": "index.html",
-  "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#00f2fe",
+  "short_name": "MusicDownloader",
+  "name": "Global Music Downloader",
   "icons": [
     {
       "src": "icon.png",
@@ -17,5 +12,10 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "start_url": "./index.html",
+  "background_color": "#121212",
+  "display": "standalone",
+  "theme_color": "#1DB954",
+  "description": "Download music from all over the world."
 }
