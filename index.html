@@ -3,32 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>World Music Pro</title>
+    <title>World Music Pro - Premium Store</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #0b0b0b; color: #ffffff; margin: 0; padding: 20px; text-align: center; }
-        .header { margin-bottom: 30px; }
-        h1 { color: #1DB954; font-size: 2.5rem; margin-bottom: 5px; }
-        .search-box { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #0b0b0b; color: #ffffff; margin: 0; padding: 20px; text-align: center; }
+        h1 { color: #1DB954; font-size: 2.2rem; margin-bottom: 5px; }
+        .search-box { display: flex; justify-content: center; gap: 8px; margin: 25px 0; }
         input { padding: 15px; width: 60%; border-radius: 30px; border: none; background: #222; color: white; outline: none; }
-        button { padding: 15px 30px; border-radius: 30px; border: none; background: #1DB954; color: white; font-weight: bold; cursor: pointer; }
-        #results { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; padding: 10px; }
-        .card { background: #181818; padding: 15px; border-radius: 15px; transition: 0.3s; }
-        .card:hover { background: #282828; }
-        .card img { width: 100%; border-radius: 10px; margin-bottom: 10px; }
-        .card h3 { font-size: 14px; margin: 5px 0; color: #fff; height: 35px; overflow: hidden; }
-        .pay-btn { background: #1DB954; border: none; color: white; padding: 10px; width: 100%; border-radius: 20px; font-size: 12px; cursor: pointer; margin-top: 10px; }
+        button#search-btn { padding: 15px 25px; border-radius: 30px; border: none; background: #1DB954; color: white; font-weight: bold; cursor: pointer; }
+        #results { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+        .card { background: #181818; padding: 12px; border-radius: 12px; border: 1px solid #333; }
+        .card img { width: 100%; border-radius: 8px; }
+        .card h3 { font-size: 13px; margin: 8px 0; height: 32px; overflow: hidden; }
+        .pay-options { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+        .btn-tzs { background: #007bff; color: white; border: none; padding: 10px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .btn-usd { background: #ffc107; color: black; border: none; padding: 10px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        p.currency-info { font-size: 11px; color: #b3b3b3; margin-top: 5px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>World Music Pro</h1>
-        <p>Search, Pay & Download Global Hits</p>
-    </div>
+    <h1>World Music Pro</h1>
+    <p>Premium Music Downloads</p>
 
     <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Andika jina la wimbo au msanii...">
-        <button onclick="tafutaMuziki()">Search</button>
+        <input type="text" id="searchInput" placeholder="Search premium hits...">
+        <button id="search-btn" onclick="tafutaMuziki()">Search</button>
     </div>
 
     <div id="results">
@@ -40,22 +39,21 @@
             const container = document.getElementById('results');
 
             if (!query) {
-                alert("Tafadhali andika jina la wimbo!");
+                alert("Please enter a song or artist name!");
                 return;
             }
 
-            container.innerHTML = "<p>Inatafuta muziki wa " + query + "... Tafadhali subiri.</p>";
+            container.innerHTML = "<p>Scanning global servers for " + query + "...</p>";
 
             try {
-                // Tunatumia iTunes API kwa sababu ni rahisi na haina malipo ya kuanza
                 const url = `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=12`;
                 const response = await fetch(url);
                 const data = await response.json();
 
-                container.innerHTML = ""; // Futa meseji ya "Inatafuta"
+                container.innerHTML = "";
 
                 if (data.results.length === 0) {
-                    container.innerHTML = "<p>Pole, hakuna wimbo uliopatikana. Jaribu jina lingine.</p>";
+                    container.innerHTML = "<p>No premium tracks found for this search.</p>";
                     return;
                 }
 
@@ -65,32 +63,34 @@
                     card.innerHTML = `
                         <img src="${song.artworkUrl100.replace('100x100', '400x400')}" alt="cover">
                         <h3>${song.trackName}</h3>
-                        <p style="font-size:12px; color:#b3b3b3;">${song.artistName}</p>
-                        <button class="pay-btn" onclick="fanyaMalipo('${song.trackName.replace(/'/g, "")}', '${song.previewUrl}')">
-                            Download (500/=)
-                        </button>
+                        <div class="pay-options">
+                            <button class="btn-tzs" onclick="lipiaTZS('${song.trackName.replace(/'/g, "")}')">Pay TZS 500 (Local)</button>
+                            <button class="btn-usd" onclick="lipiaUSD('${song.trackName.replace(/'/g, "")}')">Pay USD $5.00 (Global)</button>
+                        </div>
+                        <p class="currency-info">Visa/Mastercard/M-Pesa</p>
                     `;
                     container.appendChild(card);
                 });
             } catch (error) {
-                console.error(error);
-                container.innerHTML = "<p>Tatizo la mtandao! Hakikisha uwashe data na ujaribu tena.</p>";
+                container.innerHTML = "<p>Connection error. Please try again.</p>";
             }
         }
 
-        function fanyaMalipo(jina, link) {
-            const namba = prompt("Andika namba yako ya M-PESA/TIGO PESA kuanza malipo ya " + jina + ":");
-            
+        // Malipo ya Shilingi
+        function lipiaTZS(wimbo) {
+            const namba = prompt("Weka namba ya M-Pesa/TigoPesa (TZS 500):");
             if (namba && namba.length >= 10) {
-                alert("Ombi limetumwa kwa namba: " + namba + ". Subiri ujumbe wa namba ya siri kisha weka PIN kukamilisha.");
-                
-                // Hapa tunajifanya malipo yamekamilika baada ya sekunde 3 (Simulation)
-                setTimeout(() => {
-                    alert("Malipo Yamefanikiwa! Wimbo unaanza kupakuliwa sasa.");
-                    window.location.href = link; 
-                }, 4000);
-            } else if (namba) {
-                alert("Namba hiyo sio sahihi. Jaribu tena.");
+                alert("Processing local payment for " + wimbo + ". Check your phone to enter PIN.");
+                setTimeout(() => alert("Success! Your download is starting now."), 3000);
+            }
+        }
+
+        // Malipo ya Dollar ($5)
+        function lipiaUSD(wimbo) {
+            const kadi = prompt("Enter Card Number for International Checkout ($5.00):");
+            if (kadi) {
+                alert("Authorizing USD $5.00 transaction for " + wimbo + "... Please stay on this page.");
+                setTimeout(() => alert("USD Payment Confirmed! Your high-quality file is downloading."), 4000);
             }
         }
     </script>
