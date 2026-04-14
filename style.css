@@ -1,64 +1,77 @@
+* { box-sizing: border-box; }
 body {
-    background-color: #121212;
-    color: white;
-    font-family: Arial, sans-serif;
+    background-color: #0b0b0b;
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 20px;
-    text-align: center;
+    display: flex;
+    justify-content: center;
 }
 
 .container {
-    max-width: 500px;
-    margin: auto;
+    width: 100%;
+    max-width: 450px;
 }
 
-.search-box input {
-    width: 70%;
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
+header {
+    text-align: center;
+    margin-bottom: 30px;
 }
 
-.search-box button {
-    padding: 10px;
-    background-color: #1DB954;
+h1 { color: #1DB954; margin: 0; }
+
+.search-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 25px;
+    border: 1px solid #333;
+    background: #1a1a1a;
     color: white;
+    outline: none;
+}
+
+button {
+    padding: 12px 20px;
+    background-color: #1DB954;
     border: none;
-    border-radius: 5px;
+    border-radius: 25px;
+    color: white;
+    font-weight: bold;
     cursor: pointer;
 }
 
-.results-container {
-    margin-top: 20px;
+.music-card {
+    background: #181818;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #282828;
+    transition: 0.3s;
 }
 
-.music-card {
-    background: #1e1e1e;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.download-btn {
-    background-color: #007bff;
-    color: white;
-    text-decoration: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-}
-.music-card {
-    display: flex;
-    flex-direction: column; /* Inakaa vizuri zaidi kwenye simu */
-    gap: 10px;
-    background: #1e1e1e;
-    padding: 15px;
+.music-info {
     margin-bottom: 15px;
-    border-radius: 10px;
 }
 
-#results div[id^="paypal-button-"] {
-    width: 100%;
+.music-info strong {
+    display: block;
+    font-size: 1.1em;
+    color: #1DB954;
+}
+
+.music-info small {
+    color: #b3b3b3;
+}
+
+.price-tag {
+    float: right;
+    font-weight: bold;
+    color: #fff;
 }
