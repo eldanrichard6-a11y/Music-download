@@ -4,30 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global Music Downloader</title>
+    <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
-    
-    <script>
-    if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-    .then(reg => console.log('Service Worker Registered'))
-    .catch(err => console.log('Service Worker Failed', err));
-    });
-    }
-    </script>
-    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID&currency=USD"></script>
-    
-    <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
-
 </head>
 <body>
+
     <div class="container">
-        <h1>World Music Downloader</h1>
-        <p>Search and download music from all over the world</p>
-        
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Enter song or artist name...">
+        <header>
+            <h1>World Music Pro</h1>
+            <p>Search, Pay & Download Global Hits</p>
+        </header>
+
+        <div class="search-section">
+            <input type="text" id="searchInput" placeholder="Artist, Song or Album...">
             <button onclick="searchMusic()">Search</button>
         </div>
 
@@ -36,5 +26,11 @@
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // Kusajili Service Worker (PWA)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js');
+        }
+    </script>
 </body>
 </html>
