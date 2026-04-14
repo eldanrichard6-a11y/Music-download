@@ -3,36 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daniel Music Store - Download & Pay</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Daniel Music Store</title>
     <style>
-        /* Hizi ni kodi fupi za muonekano (CSS) ili app ipendeze */
-        body { font-family: sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; text-align: center; }
-        .search-box { margin-bottom: 30px; }
-        input { padding: 12px; width: 70%; border: 1px solid #ddd; border-radius: 5px; }
-        button#search-btn { padding: 12px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
-        #results { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
-        .song-card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: white; margin: 0; padding: 20px; text-align: center; }
+        .search-box { margin: 20px 0; }
+        input { padding: 12px; width: 65%; border-radius: 25px; border: none; outline: none; }
+        button#search-btn { padding: 12px 25px; border-radius: 25px; border: none; background-color: #1DB954; color: white; font-weight: bold; cursor: pointer; }
+        #results { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; }
+        .song-card { background: #1e1e1e; padding: 10px; border-radius: 10px; transition: 0.3s; }
         .song-card img { width: 100%; border-radius: 8px; }
-        .download-btn { background: #28a745; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; margin-top: 10px; cursor: pointer; }
+        .song-card h3 { font-size: 14px; margin: 10px 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .download-btn { background: #1DB954; color: white; border: none; padding: 8px; width: 100%; border-radius: 20px; font-size: 12px; cursor: pointer; margin-top: 5px; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Daniel Music Store 🎵</h1>
-        <p>Tafuta na pakua muziki uupendao kwa TZS 500 tu!</p>
-    </header>
-
+    <h1>Daniel Music Store 🎵</h1>
+    
     <div class="search-box">
-        <input type="text" id="search-input" placeholder="Andika jina la wimbo au msanii...">
+        <input type="text" id="search-input" placeholder="Tafuta wimbo au msanii...">
         <button id="search-btn" onclick="searchMusic()">Tafuta</button>
     </div>
 
     <div id="results">
-        <p>Andika kitu kuanza kutafuta...</p>
+        <p>Andika jina la wimbo kuanza...</p>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // KODI YA TAFUTA (SEARCH)
+        async function searchMusic() {
+            const query = document.getElementById('search-input').value;
+            const resultsDiv = document.getElementById('results');
+            
+            if (!query) {
+                alert("Andika jina la wimbo!");
+                return;
+            }
+
+            resultsDiv.innerHTML = "<p>Inatafuta...</p>";
+
+            try {
+                const response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=12`);
+                const data = await response.json();
+                resultsDiv.innerHTML = ""; 
+
+                if (data.results.length === 0) {
+                    resultsDiv.innerHTML = "<p>Hatujapata kitu, jaribu tena.</p>";
+                    return;
+                }
+
+                data.results.forEach(song => {
+                    const songCard = document.createElement('div');
+                    songCard.className = 'song-card';
+                    songCard.innerHTML = `
+                        <img src="${song.artworkUrl100.replace('100x100', '300x300')}" alt="cover">
+                        <h3>${song.trackName}</h3>
+                        <button class="download-btn" onclick="anzishaMalipo('${song.trackName.replace(/'/g, "")}', '${song.previewUrl}')">
+                            Pakua (TZS 500)
+                        </button>
+                    `;
+                    resultsDiv.innerHTML += songCard.outerHTML;
+                });
+            } catch (error) {
+                resultsDiv.innerHTML = "<p>Tatizo la mtandao!</p>";
+            }
+        }
+
+        // KODI YA MALIPO (PAYMENT)
+        function anzishaMalipo(jina, link) {
+            const namba = prompt(`Weka namba ya M-PESA/TIGO PESA ili kupakua: ${jina}`);
+            if (namba && namba.length >= 10) {
+                alert("Ombi la malipo limetumwa kwenye simu yako. Weka PIN kukamilisha.");
+                
+                // Simulation ya kusubiri malipo
+                setTimeout(() => {
+                    alert("Malipo yamefanikiwa! Wimbo unaanza kushuka sasa.");
+                    window.location.href = link; 
+                }, 3000);
+            } else if (namba) {
+                alert("Namba haina urefu sahihi!");
+            }
+        }
+    </script>
 </body>
 </html>
