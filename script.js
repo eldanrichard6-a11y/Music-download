@@ -39,19 +39,21 @@ async function searchMusic() {
     }
 }
 
-// 2. MPANGO WA MALIPO (Selcom Logic)
-function funguaMalipo(jinaLaWimbo, linkYaWimbo) {
-    const namba = prompt(`Ili kupakua '${jinaLaWimbo}', weka namba yako ya M-Pesa/TigoPesa:`);
+function lipia(wimbo, fedha) {
+    let jina = "DANIEL RICHARD";
+    let namba = "0621645957";
     
-    if (namba && namba.length >= 10) {
-        alert(`Ombi la malipo limetumwa kwenda ${namba}. Weka PIN kwenye simu yako kukamilisha.`);
+    let msg = fedha === 'TZS' ? 
+        `UNANUNUA FULL SONG: ${wimbo}\n\nLipa TZS 13,500 kwenda:\nNamba: ${namba}\nJina: ${jina}\n\nWeka Transaction ID hapa:` :
+        `BUYING FULL TRACK: ${wimbo}\n\nSend $5.00 via WorldRemit to:\nName: ${jina}\nNumber: +255${namba.substring(1)}\n\nEnter Reference ID:`;
+    
+    let id = prompt(msg);
+
+    if (id && id.length > 5) {
+        alert("Malipo Yamethibitishwa na Daniel Richard!\n\nBofya OK kuanza kupakua wimbo mzima (Full HQ).");
         
-        // Hapa tunajifanya malipo yamepita (Simulation mpaka Selcom wakukubalie)
-        setTimeout(() => {
-            alert("Malipo yamehakikiwa! Wimbo wako unaanza kushuka.");
-            window.location.href = linkYaWimbo; // Hii itapakua wimbo
-        }, 3000); 
-    } else {
-        alert("Namba ya simu haijakamilika!");
+        // Hapa ndipo unamuelekeza kwenye folder lako la nyimbo
+        // Mfano: kama mteja alitafuta wimbo tukampa link ya ku-download
+        window.location.href = "https://wa.me/255621645957?text=Daniel%2C%20nimelipia%20wimbo%20wa%20" + wimbo + ".%20ID%3A%20" + id;
     }
 }
