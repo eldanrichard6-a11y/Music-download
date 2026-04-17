@@ -1,6 +1,6 @@
 {
-  "name": "Code Pro Music",
-  "short_name": "CodePro",
+  "name": "Daniel Music store",
+  "short_name": "music download",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#0b0b0b",
